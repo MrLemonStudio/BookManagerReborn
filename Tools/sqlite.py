@@ -14,6 +14,12 @@ class RootService:
 class ReadTableService(RootService):
     def __read_table(self,table_name,sql_cmd) ->list|bool:
         try:
+            try:
+                float(self.file_location)
+            except ValueError:
+                pass
+            else:
+                raise ValueError
             if not os.path.exists(self.file_location):
                 raise FileNotFoundError
             self.connection = sqlite3.connect(self.file_location)
@@ -26,7 +32,7 @@ class ReadTableService(RootService):
         except ValueError as e:
             print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
             print("ERROR!", file=self.log_file)
-            print(f"FILE LOCATION MUST BE A STRING! {self.file_location}!\n{e}", file=self.log_file)
+            print(f"FILE LOCATION MUST BE A STRING! NOT {self.file_location}!\n{e}", file=self.log_file)
             self.log_file.close()
             return False
         self.sql_cmd=f"{sql_cmd}{table_name}"
