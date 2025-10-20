@@ -18,10 +18,7 @@ class ReadTableService(RootService):
                 raise FileNotFoundError
             self.connection = sqlite3.connect(self.file_location)
         except FileNotFoundError as e:
-            print(f"""======
-        LOGLOG
-        ======
-        {self.run_time}""", file=self.log_file)
+            print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"CANNOT FIND TABLE FILE NAMED {self.file_location}!\n{e}", file=self.log_file)
             self.log_file.close()
@@ -47,3 +44,5 @@ LOGLOG
         print(f"RESULT IS {self.result}",file=self.log_file)
         self.log_file.close()
         return self.result
+    def reta(self,table_name,sql_cmd="select * from "):
+         return self.__read_table(table_name,sql_cmd)
