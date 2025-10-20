@@ -12,7 +12,7 @@ class RootService:
         self.file_location=file_location
 
 class ReadTableService(RootService):
-    def __read_table(self,table_name,sql_cmd="select * from ") ->list|bool:
+    def __read_table(self,table_name,sql_cmd) ->list|bool:
         try:
             if not os.path.exists(self.file_location):
                 raise FileNotFoundError
@@ -24,10 +24,7 @@ class ReadTableService(RootService):
             self.log_file.close()
             return False
         except ValueError as e:
-            print(f"""======
-                    LOGLOG
-                    ======
-                    {self.run_time}""", file=self.log_file)
+            print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"FILE LOCATION MUST BE A STRING! {self.file_location}!\n{e}", file=self.log_file)
             self.log_file.close()
@@ -36,10 +33,7 @@ class ReadTableService(RootService):
         self.cursor=self.connection.cursor()
         self.cursor.execute(self.sql_cmd)
         self.result=self.cursor.fetchall()
-        print(f"""======
-LOGLOG
-======
-{self.run_time}""", file=self.log_file)
+        print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
         print("OK!",file=self.log_file)
         print(f"RESULT IS {self.result}",file=self.log_file)
         self.log_file.close()
