@@ -24,6 +24,7 @@ class ReadTableService(RootService):
         {self.run_time}""", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"CANNOT FIND TABLE FILE NAMED {self.file_location}!\n{e}", file=self.log_file)
+            self.log_file.close()
             return False
         except ValueError as e:
             print(f"""======
@@ -32,6 +33,7 @@ class ReadTableService(RootService):
                     {self.run_time}""", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"FILE LOCATION MUST BE A STRING! {self.file_location}!\n{e}", file=self.log_file)
+            self.log_file.close()
             return False
         self.sql_cmd=f"{sql_cmd}{table_name}"
         self.cursor=self.connection.cursor()
@@ -43,4 +45,5 @@ LOGLOG
 {self.run_time}""", file=self.log_file)
         print("OK!",file=self.log_file)
         print(f"RESULT IS {self.result}",file=self.log_file)
+        self.log_file.close()
         return self.result
