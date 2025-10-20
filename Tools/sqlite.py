@@ -4,13 +4,18 @@ import os
 class RootService:
     def __init__(self,file_location):
         self.run_time=datetime.datetime.today().strftime("%Y%m%d%H%M%S")
-        self.log_location=f"../logs/{self.run_time}.log"
+        self.log_dir_path="../logs"
+        if not os.path.exists(self.log_dir_path):
+            os.mkdir(self.log_dir_path)
+        self.log_location=f"{self.log_dir_path}/{self.run_time}.log"
         self.log_file=open(self.log_location,"w",errors="ignore")
         self.file_location=file_location
 
 class ReadTableService(RootService):
     def __read_table(self,table_name,sql_cmd="select * from ") ->list|bool:
         try:
+            if not os.path.exists(self.file_location):
+                raise FileNotFoundError
             self.connection = sqlite3.connect(self.file_location)
         except FileNotFoundError as e:
             print(f"""======
