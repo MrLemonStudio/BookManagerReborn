@@ -19,23 +19,29 @@ class ReadTableService(RootService):
             except ValueError:
                 pass
             else:
-                raise ValueError
+                raise ValueError("ERR!ERR!ERR!Value!")
             if not os.path.exists(self.file_location):
-                raise FileNotFoundError
+                raise FileNotFoundError("ERR!ERR!ERR!F.N.F.!")
             self.connection = sqlite3.connect(self.file_location)
         except FileNotFoundError as e:
+            print(f"======\nLOGLOG\n======\n{self.run_time}")
+            print("ERROR!")
+            print(f"CANNOT FIND TABLE FILE NAMED {self.file_location}!\n{e}")
             print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"CANNOT FIND TABLE FILE NAMED {self.file_location}!\n{e}", file=self.log_file)
             self.log_file.close()
             return False
         except ValueError as e:
+            print(f"======\nLOGLOG\n======\n{self.run_time}")
+            print("ERROR!")
+            print(f"FILE LOCATION MUST BE A STRING! NOT {self.file_location}!\n{e}")
             print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
             print("ERROR!", file=self.log_file)
             print(f"FILE LOCATION MUST BE A STRING! NOT {self.file_location}!\n{e}", file=self.log_file)
             self.log_file.close()
             return False
-        self.sql_cmd=f"{sql_cmd}{table_name}"
+        self.sql_cmd=f"select {sql_cmd} from {table_name}"
         self.cursor=self.connection.cursor()
         self.cursor.execute(self.sql_cmd)
         self.result=self.cursor.fetchall()
@@ -44,5 +50,5 @@ class ReadTableService(RootService):
         print(f"RESULT IS {self.result}",file=self.log_file)
         self.log_file.close()
         return self.result
-    def reta(self,table_name,sql_cmd="select * from "):
+    def reta(self,table_name,sql_cmd="*"):
          return self.__read_table(table_name,sql_cmd)
