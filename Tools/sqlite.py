@@ -4,7 +4,7 @@ import os
 class RootService:
     def __init__(self,file_location):
         self.run_time=datetime.datetime.today().strftime("%Y%m%d%H%M%S")
-        self.log_dir_path="../logs"
+        self.log_dir_path="../../logs"
         if not os.path.exists(self.log_dir_path):
             os.mkdir(self.log_dir_path)
         self.log_location=f"{self.log_dir_path}/{self.run_time}.log"
