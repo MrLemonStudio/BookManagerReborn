@@ -12,7 +12,7 @@ class RootService:
         self.file_location=file_location
 
 class ReadTableService(RootService):
-    def __read_table(self,table_name,sql_cmd) ->list|bool:
+    def __read_table(self,table_name:str,sql_cmd:str) ->list|bool:
         try:
             try:
                 float(self.file_location)
@@ -52,3 +52,35 @@ class ReadTableService(RootService):
         return self.result
     def reta(self,table_name,sql_cmd="*"):
          return self.__read_table(table_name,sql_cmd)
+
+class CreateTableService(RootService):
+    def __create_table(self,table_name:str,**column_names)->bool:
+        try:
+            try:
+                float(self.file_location)
+            except ValueError:
+                pass
+            else:
+                raise ValueError("ERR!ERR!ERR!Value!")
+            if os.path.exists(self.file_location):
+                raise FileExistsError("ERR!ERR!ERR!F.E.!")
+            else:
+                pass
+        except FileExistsError as e:
+            print(f"======\nLOGLOG\n======\n{self.run_time}")
+            print("ERROR!")
+            print(f"FOUND TABLE FILE NAMED {self.file_location}!\n{e}")
+            print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
+            print("ERROR!", file=self.log_file)
+            print(f"FOUND TABLE FILE NAMED {self.file_location}!\n{e}", file=self.log_file)
+            self.log_file.close()
+            return False
+        except ValueError as e:
+            print(f"======\nLOGLOG\n======\n{self.run_time}")
+            print("ERROR!")
+            print(f"FILE LOCATION MUST BE A STRING! NOT {self.file_location}!\n{e}")
+            print(f"======\nLOGLOG\n======\n{self.run_time}", file=self.log_file)
+            print("ERROR!", file=self.log_file)
+            print(f"FILE LOCATION MUST BE A STRING! NOT {self.file_location}!\n{e}", file=self.log_file)
+            self.log_file.close()
+            return False
