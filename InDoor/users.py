@@ -1,4 +1,4 @@
-from Tools.custom_errors import UserExistsException
+from Tools.custom_errors import *
 from Tools.sqlite_new import SQLiteDatabaseManager
 import datetime
 import os
@@ -47,3 +47,48 @@ class UserActionManager:
         return True
     def crur(self,user_name:str, password:str,is_administrator:bool=False)->bool:
         return self.__create_user(user_name,password,is_administrator)
+
+    def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool:
+        user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where user_name=?",(user_name,))
+        try:
+            if not user_name_searched:
+                raise UserDoesNotExistException(f"Please create any user first")
+            else:
+                pass
+        except UserDoesNotExistException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        user_does_not_exist=0
+        try:
+            for i in user_name_searched:
+                    if i["user_name"]==user_name or i["id"]==user_id:
+                        if i["password"]==password:
+                            if i["is_administrator"]:
+                                print(f"Successfully logged in administrator {user_name}")
+                                print(f"Successfully logged in administrator {user_name}",file=self.log_file)
+                                self.log_file.close()
+                            else:
+                                print(f"Successfully logged in normal user {user_name}")
+                                print(f"Successfully logged in normal user {user_name}",file=self.log_file)
+                                self.log_file.close()
+                        else:
+                            raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                    else:
+                        user_does_not_exist+=1
+            if user_does_not_exist==len(user_name_searched):
+                raise UserDoesNotExistException(f"User {user_name} does not exists")
+        except UserDoesNotExistException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        except PasswordDoesNotMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        return True
+    def lour(self,user_name:str|None, password:str,user_id:None|int) -> bool:
+        return self.__login_user(user_name,password,user_id)
