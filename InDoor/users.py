@@ -1,3 +1,5 @@
+from pysss import password
+
 from Tools.custom_errors import *
 from Tools.sqlite_new import SQLiteDatabaseManager
 import datetime
@@ -49,10 +51,20 @@ class UserActionManager:
         return self.__create_user(user_name,password,is_administrator)
 
     def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool:
+        try:
+            if not(user_name or user_id):
+                raise UserNameDoesNotMatchException("Please enter user_name or user_id")
+            else:
+                pass
+        except UserNameDoesNotMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
         user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where user_name=?",(user_name,))
         try:
             if not user_name_searched:
-                raise UserDoesNotExistException(f"Please create any user first")
+                raise UserDoesNotExistException("Please create any user first")
             else:
                 pass
         except UserDoesNotExistException as e:
@@ -92,3 +104,86 @@ class UserActionManager:
         return True
     def lour(self,user_name:str|None, password:str,user_id:None|int) -> bool:
         return self.__login_user(user_name,password,user_id)
+
+    def __change_user_name(self,old_user_name:str,new_user_name:str,password:str)->bool:
+        try:
+            if old_user_name==new_user_name:
+                raise UserNameMatchException("The old user name and the new one can't be the same")
+            else:
+                pass
+        except UserNameMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        user_name_list=self.sqlite.query(f"select user_name,id,password from {self.table_name}")
+        user_does_not_exist=0
+        try:
+            for i in user_name_list:
+                if i["user_name"]==old_user_name:
+                    if i["password"]==password:
+                        self.sqlite.execute_sql(f"update {self.table_name} set user_name=? where id=?",(new_user_name,i["id"]))
+                        break
+                    else:
+                        raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                else:
+                    user_does_not_exist+=1
+            if user_does_not_exist==len(user_name_list):
+                raise UserDoesNotExistException(f"User {old_user_name} does not exists")
+        except UserDoesNotExistException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        except PasswordDoesNotMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        except Exception as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        return True
+    def curn(self,old_user_name:str,new_user_name:str,password:str)->bool:
+        return self.__change_user_name(old_user_name,new_user_name,password)
+
+    def __change_user_password(self,user_name:str,old_password:str,new_password:str)->bool:
+        try:
+            if old_password==new_password:
+                raise PasswordMatchException("The old password and the new one can't be the same")
+            else:
+                pass
+        except PasswordMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        password_list=self.sqlite.query(f"select user_name,password from {self.table_name}")
+        user_does_not_exist=0
+        try:
+            for i in password_list:
+                if i["user_name"]==user_name:
+                    if i["password"]==old_password:
+                        self.sqlite.execute_sql(f"update {self.table_name} set password=? where user_name=?",(new_password,user_name))
+                        break
+                    else:
+                        raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                else:
+                    user_does_not_exist+=1
+            if user_does_not_exist==len(password_list):
+                raise UserDoesNotExistException(f"User {user_name} does not exists")
+        except PasswordDoesNotMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        except UserDoesNotExistException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
+        return True
+    def curp(self,user_name:str,old_password:str,new_password:str)->bool:
+        return self.__change_user_password(user_name,old_password,new_password)
