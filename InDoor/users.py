@@ -4,9 +4,9 @@ import datetime
 import os
 
 class UserActionManager:
-    def __init__(self,db_path,table_name):
+    def __init__(self,db_path:str,table_name:str,log_dir_path:str):
         run_time = datetime.datetime.today().strftime("%Y%m%d%H%M%S")
-        self.log_dir_path = "../logs"
+        self.log_dir_path = log_dir_path
         if not os.path.exists(self.log_dir_path):
             os.mkdir(self.log_dir_path)
         self.log_location = f"{self.log_dir_path}/{run_time}.log"
