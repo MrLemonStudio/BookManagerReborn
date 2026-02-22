@@ -1,3 +1,4 @@
 I just rebuilt it.The old one is dead.
+Using MIT LICENSE.
 
-By Lemon/Polaris
+By Lemon's Studio(New Name) OR Polaris(Old Name)
