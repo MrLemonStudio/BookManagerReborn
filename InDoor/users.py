@@ -1,5 +1,3 @@
-from pysss import password
-
 from Tools.custom_errors import *
 from Tools.sqlite_new import SQLiteDatabaseManager
 import datetime
