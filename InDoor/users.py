@@ -167,7 +167,7 @@ class UserActionManager:
                         self.sqlite.execute_sql(f"update {self.table_name} set password=? where user_name=?",(new_password,user_name))
                         break
                     else:
-                        raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                        raise PasswordDoesNotMatchException(f"Password {old_password} does not match")
                 else:
                     user_does_not_exist+=1
             if user_does_not_exist==len(password_list):
