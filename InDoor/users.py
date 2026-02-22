@@ -20,7 +20,7 @@ class UserActionManager:
     def __create_user(self, user_name:str, password:str,is_administrator:bool=False)->bool:
         table_exist=self.sqlite.table_exists(self.table_name)
         if not table_exist:
-            self.sqlite.create_table(self.table_name,{"user_name":"text unique not null","password":"text","id":"integer primary key not null","is_administrator":"boolean not null default false"})
+            self.sqlite.create_table(self.table_name,{"user_name":"text unique not null","password":"text not null","id":"integer primary key not null","is_administrator":"boolean not null default false"})
         else:
             pass
         users_data_now=self.sqlite.query(f"select user_name,id from {self.table_name}")
