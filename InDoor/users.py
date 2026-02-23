@@ -69,7 +69,7 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where user_name=?",(user_name,))
+        user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where {"user_name" if user_name else user_id}=?",((user_name,)if user_name else (user_id,)))
         try:
             if not user_name_searched:
                 raise UserDoesNotExistException("Please create any user first")
@@ -86,13 +86,13 @@ class UserActionManager:
                     if i["user_name"]==user_name or i["id"]==user_id:
                         if i["password"]==password:
                             if i["is_administrator"]:
-                                print(f"Successfully logged in administrator {user_name}")
-                                print(f"Successfully logged in administrator {user_name}",file=self.log_file)
+                                print(f"Successfully logged in administrator {user_name if user_name else f"ID = {user_id}"}")
+                                print(f"Successfully logged in administrator {user_name if user_name else f"ID = {user_id}"}",file=self.log_file)
                                 self.log_file.close()
                                 return True,True
                             else:
-                                print(f"Successfully logged in normal user {user_name}")
-                                print(f"Successfully logged in normal user {user_name}",file=self.log_file)
+                                print(f"Successfully logged in normal user {user_name if user_name else f"ID = {user_id}"}")
+                                print(f"Successfully logged in normal user {user_name if user_name else f"ID = {user_id}"}",file=self.log_file)
                                 self.log_file.close()
                         else:
                             raise PasswordDoesNotMatchException(f"Password {password} does not match")
