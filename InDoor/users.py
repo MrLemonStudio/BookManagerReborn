@@ -18,6 +18,16 @@ class UserActionManager:
         self.log_file=open(self.log_location,"w",encoding="utf-8",errors="ignore")
 
     def __create_user(self, user_name:str, password:str,is_administrator:bool=False)->bool|tuple:
+        try:
+            if not password:
+                raise PasswordDoesNotMatchException("Please enter password")
+            else:
+                pass
+        except PasswordDoesNotMatchException as e:
+            print(e)
+            print(e,file=self.log_file)
+            self.log_file.close()
+            return False
         table_exist=self.sqlite.table_exists(self.table_name)
         if not table_exist:
             self.sqlite.create_table(self.table_name,{"user_name":"text unique not null","password":"text not null","id":"integer primary key not null","is_administrator":"boolean not null default false"})
