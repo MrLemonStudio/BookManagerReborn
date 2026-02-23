@@ -17,7 +17,7 @@ class UserActionManager:
         self.cursor=self.connection.cursor()
         self.log_file=open(self.log_location,"w",encoding="utf-8",errors="ignore")
 
-    def __create_user(self, user_name:str, password:str,is_administrator:bool=False)->bool:
+    def __create_user(self, user_name:str, password:str,is_administrator:bool=False)->bool|tuple:
         table_exist=self.sqlite.table_exists(self.table_name)
         if not table_exist:
             self.sqlite.create_table(self.table_name,{"user_name":"text unique not null","password":"text not null","id":"integer primary key not null","is_administrator":"boolean not null default false"})
@@ -34,7 +34,7 @@ class UserActionManager:
                 self.log_file.close()
                 return False
         try:
-            user_id=users_data_now[-1]["id"]+1
+            user_id=users_data_now[0]["id"]+1
         except IndexError:
             user_id=1
         try:
@@ -44,11 +44,13 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        return True
+        if is_administrator:
+            return True,True
+        return True,False
     def crur(self,user_name:str, password:str,is_administrator:bool=False)->bool:
         return self.__create_user(user_name,password,is_administrator)
 
-    def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool:
+    def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool|tuple:
         try:
             if not(user_name or user_id):
                 raise UserNameDoesNotMatchException("Please enter user_name or user_id")
@@ -79,6 +81,7 @@ class UserActionManager:
                                 print(f"Successfully logged in administrator {user_name}")
                                 print(f"Successfully logged in administrator {user_name}",file=self.log_file)
                                 self.log_file.close()
+                                return True,True
                             else:
                                 print(f"Successfully logged in normal user {user_name}")
                                 print(f"Successfully logged in normal user {user_name}",file=self.log_file)
@@ -99,7 +102,7 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        return True
+        return True,False
     def lour(self,user_name:str|None, password:str,user_id:None|int) -> bool:
         return self.__login_user(user_name,password,user_id)
 
