@@ -111,7 +111,7 @@ class UserActionManager:
             self.log_file.close()
             return False
         return True,False
-    def lour(self,user_name:str|None, password:str,user_id:None|int) -> bool:
+    def lour(self,user_name:str|None=None, password:str="",user_id:None|int=None) -> bool:
         return self.__login_user(user_name,password,user_id)
 
     def __change_user_name(self,old_user_name:str,new_user_name:str,password:str)->bool:
