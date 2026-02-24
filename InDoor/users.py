@@ -29,15 +29,19 @@ class UserActionManager:
             return False
         table_exist=self.sqlite.table_exists(self.table_name)
         if not table_exist:
-            self.sqlite.create_table(self.table_name,{"user_name":"text unique not null","password":"text not null","id":"integer primary key not null","is_administrator":"boolean not null default false"})
+            self.sqlite.create_table(self.table_name,
+                                     {"user_name":"text unique not null",
+                                      "password":"text not null",
+                                      "id":"integer primary key not null",
+                                      "is_administrator":"boolean not null default false"})
         else:
             pass
         users_data_now=self.sqlite.query(f"select user_name,id from {self.table_name}")
         for i in users_data_now:
             try:
                 if i["user_name"]==user_name:
-                    raise UserExistsException(f"User {user_name} already exists")
-            except UserExistsException as e:
+                    raise ExistsException(f"User {user_name} already exists")
+            except ExistsException as e:
                 print(e)
                 print(e,file=self.log_file)
                 self.log_file.close()
@@ -47,7 +51,8 @@ class UserActionManager:
         except IndexError:
             user_id=1
         try:
-            self.sqlite.execute_sql(f"insert into {self.table_name}(user_name,password,id,is_administrator) values(?,?,?,?)",(user_name,password,user_id,is_administrator))
+            self.sqlite.execute_sql(f"insert into {self.table_name}(user_name,password,id,is_administrator) values(?,?,?,?)",
+                                    (user_name,password,user_id,is_administrator))
         except Exception as e:
             print(e)
             print(e,file=self.log_file)
@@ -62,21 +67,22 @@ class UserActionManager:
     def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool|tuple:
         try:
             if not(user_name or user_id):
-                raise UserNameDoesNotMatchException("Please enter user_name or user_id")
+                raise NameDoesNotMatchException("Please enter user_name or user_id")
             else:
                 pass
-        except UserNameDoesNotMatchException as e:
+        except NameDoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where {"user_name" if user_name else user_id}=?",((user_name,)if user_name else (user_id,)))
+        user_name_searched=self.sqlite.query(f"select user_name,password,id,is_administrator from {self.table_name} where {"user_name" if user_name else user_id}=?",
+                                             ((user_name,)if user_name else (user_id,)))
         try:
             if not user_name_searched:
-                raise UserDoesNotExistException("Please create any user first")
+                raise DoesNotExistException("Please create any user first")
             else:
                 pass
-        except UserDoesNotExistException as e:
+        except DoesNotExistException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -100,8 +106,8 @@ class UserActionManager:
                     else:
                         user_does_not_exist+=1
             if user_does_not_exist==len(user_name_searched):
-                raise UserDoesNotExistException(f"User {user_name} does not exists")
-        except UserDoesNotExistException as e:
+                raise DoesNotExistException(f"User {user_name} does not exists")
+        except DoesNotExistException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -118,10 +124,10 @@ class UserActionManager:
     def __change_user_name(self,old_user_name:str,new_user_name:str,password:str)->bool:
         try:
             if old_user_name==new_user_name:
-                raise UserNameMatchException("The old user name and the new one can't be the same")
+                raise NameMatchesException("The old user name and the new one can't be the same")
             else:
                 pass
-        except UserNameMatchException as e:
+        except NameMatchesException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -132,15 +138,16 @@ class UserActionManager:
             for i in user_name_list:
                 if i["user_name"]==old_user_name:
                     if i["password"]==password:
-                        self.sqlite.execute_sql(f"update {self.table_name} set user_name=? where id=?",(new_user_name,i["id"]))
+                        self.sqlite.execute_sql(f"update {self.table_name} set user_name=? where id=?",
+                                                (new_user_name,i["id"]))
                         break
                     else:
                         raise PasswordDoesNotMatchException(f"Password {password} does not match")
                 else:
                     user_does_not_exist+=1
             if user_does_not_exist==len(user_name_list):
-                raise UserDoesNotExistException(f"User {old_user_name} does not exists")
-        except UserDoesNotExistException as e:
+                raise DoesNotExistException(f"User {old_user_name} does not exists")
+        except DoesNotExistException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -176,20 +183,21 @@ class UserActionManager:
             for i in password_list:
                 if i["user_name"]==user_name:
                     if i["password"]==old_password:
-                        self.sqlite.execute_sql(f"update {self.table_name} set password=? where user_name=?",(new_password,user_name))
+                        self.sqlite.execute_sql(f"update {self.table_name} set password=? where user_name=?",
+                                                (new_password,user_name))
                         break
                     else:
                         raise PasswordDoesNotMatchException(f"Password {old_password} does not match")
                 else:
                     user_does_not_exist+=1
             if user_does_not_exist==len(password_list):
-                raise UserDoesNotExistException(f"User {user_name} does not exists")
+                raise DoesNotExistException(f"User {user_name} does not exists")
         except PasswordDoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        except UserDoesNotExistException as e:
+        except DoesNotExistException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
