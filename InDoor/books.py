@@ -54,6 +54,9 @@ class BooksManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
+        print(f"Successfully created a new book named {book_name}")
+        print(f"Successfully created a new book named {book_name}",file=self.log_file)
+        self.log_file.close()
         return True
     def nebk(self,book_name:str,book_id:int|float|str,book_price:int|float|None=None,author:str|None=None,picture:bytes|None=None)->bool:
         return self.__new_book(book_name,book_id,book_price,author,picture)
