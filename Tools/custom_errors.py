@@ -10,18 +10,10 @@ class DoesNotExistException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class PasswordDoesNotMatchException(Exception):
+class MatchesException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class PasswordMatchException(Exception):
-    def __init__(self,message):
-        super().__init__(message)
-
-class NameMatchesException(Exception):
-    def __init__(self,message):
-        super().__init__(message)
-
-class NameDoesNotMatchException(Exception):
+class DoesNotMatchException(Exception):
     def __init__(self,message):
         super().__init__(message)

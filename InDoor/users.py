@@ -19,10 +19,10 @@ class UserActionManager:
     def __create_user(self, user_name:str, password:str,is_administrator:bool=False)->bool|tuple:
         try:
             if not password:
-                raise PasswordDoesNotMatchException("Please enter password")
+                raise DoesNotMatchException("Please enter password")
             else:
                 pass
-        except PasswordDoesNotMatchException as e:
+        except DoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -76,10 +76,10 @@ class UserActionManager:
     def __login_user(self, user_name:str|None, password:str, user_id: None | int)->bool|tuple:
         try:
             if not(user_name or user_id):
-                raise NameDoesNotMatchException("Please enter user_name or user_id")
+                raise DoesNotMatchException("Please enter user_name or user_id")
             else:
                 pass
-        except NameDoesNotMatchException as e:
+        except DoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -111,7 +111,7 @@ class UserActionManager:
                                 print(f"Successfully logged in normal user {user_name if user_name else f"ID = {user_id}"}",file=self.log_file)
                                 self.log_file.close()
                         else:
-                            raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                            raise DoesNotMatchException(f"Password {password} does not match")
                     else:
                         user_does_not_exist+=1
             if user_does_not_exist==len(user_name_searched):
@@ -121,7 +121,7 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        except PasswordDoesNotMatchException as e:
+        except DoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -133,10 +133,10 @@ class UserActionManager:
     def __change_user_name(self,old_user_name:str,new_user_name:str,password:str)->bool:
         try:
             if old_user_name==new_user_name:
-                raise NameMatchesException("The old user name and the new one can't be the same")
+                raise MatchesException("The old user name and the new one can't be the same")
             else:
                 pass
-        except NameMatchesException as e:
+        except MatchesException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -151,7 +151,7 @@ class UserActionManager:
                                                 (new_user_name,i["id"]))
                         break
                     else:
-                        raise PasswordDoesNotMatchException(f"Password {password} does not match")
+                        raise DoesNotMatchException(f"Password {password} does not match")
                 else:
                     user_does_not_exist+=1
             if user_does_not_exist==len(user_name_list):
@@ -161,7 +161,7 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
-        except PasswordDoesNotMatchException as e:
+        except DoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -181,10 +181,10 @@ class UserActionManager:
     def __change_user_password(self,user_name:str,old_password:str,new_password:str)->bool:
         try:
             if old_password==new_password:
-                raise PasswordMatchException("The old password and the new one can't be the same")
+                raise MatchesException("The old password and the new one can't be the same")
             else:
                 pass
-        except PasswordMatchException as e:
+        except MatchesException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
@@ -199,12 +199,12 @@ class UserActionManager:
                                                 (new_password,user_name))
                         break
                     else:
-                        raise PasswordDoesNotMatchException(f"Password {old_password} does not match")
+                        raise DoesNotMatchException(f"Password {old_password} does not match")
                 else:
                     user_does_not_exist+=1
             if user_does_not_exist==len(password_list):
                 raise DoesNotExistException(f"User {user_name} does not exists")
-        except PasswordDoesNotMatchException as e:
+        except DoesNotMatchException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()

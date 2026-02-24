@@ -19,10 +19,10 @@ class BooksManager:
     def __new_book(self,book_name:str,book_id:int|float|str,book_price:int|float|None=None,author:str|None=None,picture:bytes|None=None)->bool:
         try:
             if (not book_name) or (not book_id):
-                raise NameMatchesException("Book name or book id is required")
+                raise MatchesException("Book name or book id is required")
             else:
                 pass
-        except NameMatchesException as e:
+        except MatchesException as e:
             print(e)
             print(e,file=self.log_file)
             self.log_file.close()
