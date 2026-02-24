@@ -1,10 +1,11 @@
+from pathlib import Path
 from Tools.custom_errors import *
 from Tools.sqlite_new import SQLiteDatabaseManager
 import datetime
 import os
 
 class UserActionManager:
-    def __init__(self,db_path:str,table_name:str,log_dir_path:str):
+    def __init__(self,db_path:str,table_name:str,log_dir_path:str|Path):
         run_time = datetime.datetime.today().strftime("%Y%m%d%H%M%S")
         self.log_dir_path = log_dir_path
         if not os.path.exists(self.log_dir_path):
