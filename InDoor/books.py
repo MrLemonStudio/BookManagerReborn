@@ -55,3 +55,5 @@ class BooksManager:
             self.log_file.close()
             return False
         return True
+    def nebk(self,book_name:str,book_id:int|float|str,book_price:int|float|None=None,author:str|None=None,picture:bytes|None=None)->bool:
+        return self.__new_book(book_name,book_id,book_price,author,picture)
