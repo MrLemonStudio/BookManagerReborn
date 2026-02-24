@@ -29,7 +29,7 @@ class BooksManager:
             return False
         table_exist = self.sqlite.table_exists(self.table_name)
         if not table_exist:
-            self.sqlite.create_table(self.table_name, {"book_name": "text unique not null",
+            self.sqlite.create_table(self.table_name, {"book_name": "text not null",
                                                        "book_id": "text primary key not null",
                                                        "book_price": "real",
                                                        "author": "text",
