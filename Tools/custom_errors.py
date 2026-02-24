@@ -2,11 +2,11 @@ class RUSureThatThisIsPossible(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class UserExistsException(Exception):
+class ExistsException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class UserDoesNotExistException(Exception):
+class DoesNotExistException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
@@ -18,10 +18,10 @@ class PasswordMatchException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class UserNameMatchException(Exception):
+class NameMatchesException(Exception):
     def __init__(self,message):
         super().__init__(message)
 
-class UserNameDoesNotMatchException(Exception):
+class NameDoesNotMatchException(Exception):
     def __init__(self,message):
         super().__init__(message)
