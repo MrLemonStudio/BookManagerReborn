@@ -46,8 +46,11 @@ class UserActionManager:
                 print(e,file=self.log_file)
                 self.log_file.close()
                 return False
+        list_user_id=[]
         try:
-            user_id=users_data_now[0]["id"]+1
+            for i in users_data_now:
+                list_user_id.append(i["id"])
+            user_id=max(list_user_id)+1
         except IndexError:
             user_id=1
         try:
@@ -59,7 +62,13 @@ class UserActionManager:
             self.log_file.close()
             return False
         if is_administrator:
+            print(f"Successfully created administrator user {user_name}")
+            print(f"Successfully created administrator user {user_name}",file=self.log_file)
+            self.log_file.close()
             return True,True
+        print(f"Successfully created normal user {user_name}")
+        print(f"Successfully created normal user {user_name}",file=self.log_file)
+        self.log_file.close()
         return True,False
     def crur(self,user_name:str, password:str,is_administrator:bool=False)->bool:
         return self.__create_user(user_name,password,is_administrator)
@@ -162,6 +171,9 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
+        print("Successfully changed user name")
+        print("Successfully changed user name",file=self.log_file)
+        self.log_file.close()
         return True
     def curn(self,old_user_name:str,new_user_name:str,password:str)->bool:
         return self.__change_user_name(old_user_name,new_user_name,password)
@@ -202,6 +214,8 @@ class UserActionManager:
             print(e,file=self.log_file)
             self.log_file.close()
             return False
+        print("Successfully changed password")
+        print("Successfully changed password",file=self.log_file)
         return True
     def curp(self,user_name:str,old_password:str,new_password:str)->bool:
         return self.__change_user_password(user_name,old_password,new_password)
